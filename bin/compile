@@ -86,6 +86,7 @@ fi
   # Make npm output to STDOUT instead of its default STDERR
   # NOTE: we install ALL dependencies so we can run a build
   npm install --userconfig $build_dir/.npmrc 2>&1 | indent
+  ls $build_dir/node_modules
 )
 
 # Persist goodies like node-version in the slug
