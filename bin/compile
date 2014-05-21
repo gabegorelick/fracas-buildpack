@@ -86,8 +86,15 @@ fi
   # Make npm output to STDOUT instead of its default STDERR
   # NOTE: we install ALL dependencies so we can run a build
   npm install --userconfig $build_dir/.npmrc 2>&1 | indent
-  ls $build_dir/node_modules
 )
+
+if [ -f $build_dir/bower.json ]; then
+  npm install bower
+  echo "-----> Found bower.json, running bower install"
+  $build_dir/node_modules/.bin/bower install
+else
+  echo "-----> No bower.json found"
+fi
 
 # Persist goodies like node-version in the slug
 mkdir -p $build_dir/.heroku
