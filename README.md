@@ -1,39 +1,28 @@
-Heroku Buildpack for Node.js and gulp.js
+Heroku Buildpack for Fracas
 ========================================
+
+A buildpack to deploy Fracas on Heroku.
+
+How it works
+------------
+An overview of what this buildpack does:
+
+- Uses the [semver.io](https://semver.io) webservice to find the latest version of node that satisfies the [engines.node semver range](https://npmjs.org/doc/json.html#engines) in your package.json.
+- Allows any recent version of node to be used, including [pre-release versions](https://semver.io/node.json).
+- Uses an [S3 caching proxy](https://github.com/heroku/s3pository#readme) of nodejs.org for faster downloads of the node binary.
+- Discourages use of dangerous semver ranges like `*` and `>0.10`.
+- Uses the version of `npm` that comes bundled with `node`.
+- Puts `node` and `npm` on the `PATH` so they can be executed with [heroku run](https://devcenter.heroku.com/articles/one-off-dynos#an-example-one-off-dyno).
+- Caches the `node_modules` directory across builds for fast deploys.
+- Doesn't use the cache if `node_modules` is checked into version control.
+- Runs `npm rebuild` if `node_modules` is checked into version control.
+- Always runs `npm install` to ensure [npm script hooks](https://npmjs.org/doc/misc/npm-scripts.html) are executed.
+- Installs all dependencies, including devDependencies, so you don't have to check in build artifacts
+- Runs `bower install`
+- Always runs `npm prune` after restoring cached modules to ensure cleanup of unused dependencies.
+- Runs `gulp build`
+
 
 Usage
 -----
-
-- Set your Heroku app's buildpack URL to `https://github.com/appstack/heroku-buildpack-nodejs-gulp.git`. To be safe, you should really fork this and use your fork's URL.
-- Run `heroku labs:enable user-env-compile` to enable environment variable support
-- Run `heroku config:set NODE_ENV=production` to set your environment to `production` (or any other name)
-- Add a Gulp task called `heroku:production` that builds your app
-- Install the dependenies for serving the app: `npm install gzippo express --save`
-- Create a simple web server in the root called `web.js`:
-
-```
-var gzippo = require('gzippo');
-var express = require('express');
-var app = express();
-
-app.use(express.logger('dev'));
-app.use(gzippo.staticGzip("" + __dirname + "/build"));
-app.listen(process.env.PORT || 5000);
-```
-
-- Add a single line `Procfile` to the root to serve the app via node:
-
-```
-web: node web.js
-```
-
-Credits
--------
-
-Inspired by [Deploying a Yeoman/Angular app to Heroku](http://www.sitepoint.com/deploying-yeomanangular-app-heroku/).
-
-Forked from [heroku-buildpack-nodejs-gulp](https://github.com/timdp/heroku-buildpack-nodejs-gulp).
-
-Which was forked from [heroku-buildpack-nodejs](https://github.com/heroku/heroku-buildpack-nodejs).
-
-Heavily based on [heroku-buildpack-nodejs-grunt](https://github.com/mbuchetics/heroku-buildpack-nodejs-grunt).
+TODO describe config variables that need to be set
